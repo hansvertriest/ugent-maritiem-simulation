@@ -4,17 +4,24 @@ import Data from './Data';
 import dataCoordsCSV from '../assets/dataCoords.csv' // collums => arrays
 import dataForcesCSV from '../assets/dataForces.csv'// collums => arrays
 
-// const dataForcesCSV = DataForcesCSV.map((timePoint) => {
-//     return timePoint.shift();
-// });
+// remove header
 dataForcesCSV.shift();
 
-const data = new Data( bolderData);
-data.addTimePoints(dataCoordsCSV, dataForcesCSV)
+// get shipTranslation data
+const shipTranslations = dataForcesCSV.map((timePoint) => {
+    return timePoint.filter((column, index) => {
+        if (index >= bolderData.length && index < bolderData.length + 3) {
+            return true;
+        }
+        return false;
+    });
+});
+
+const data = new Data(bolderData);
+data.addTimePoints(dataCoordsCSV, dataForcesCSV, shipTranslations)
     .then( () => {
         console.log(data);
     })
-// console.log(data);
 
 // Data = {
 //     "bolders": [
