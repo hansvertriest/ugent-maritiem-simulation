@@ -31,7 +31,6 @@ const appInit = async () => {
     const simulation = new Simulation(1000,600, data);
     simulation.init();
     await simulation.addShip(metaData.caseShip, true);
-    simulation.caseShip.setImageToMoving();
     simulation.drawCaseShip();
     simulation.play();
 }

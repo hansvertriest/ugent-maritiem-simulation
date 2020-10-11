@@ -24,7 +24,7 @@ export default class Simulation {
         this.animationPlaying = false;
 
         // variables for improving visual message
-        this.translationAmlifierFactor = 2;
+        this.translationAmplifierFactor = 10;
         this.distanceToKaaiInMeter = -40;
     }
 
@@ -107,8 +107,7 @@ export default class Simulation {
     drawCaseShip() {
         const length = this.meterToPx(this.caseShip.length);
         const width = this.meterToPx(this.caseShip.width);
-        // this.ctx.fillStyle = "orange";
-
+        
         const canvasCoords = this.originToCanvasCoords(
             this.caseShip.posX, 
             this.caseShip.posY, 
@@ -116,7 +115,13 @@ export default class Simulation {
             width
         );
 
-        this.ctx.drawImage(this.caseShip.image, canvasCoords.x,canvasCoords.y, length, width);
+        // rotate context to draw the rotation of the ship
+        this.ctx.save();
+        this.ctx.translate(canvasCoords.x,canvasCoords.y);
+        this.ctx.rotate(this.caseShip.rotationInDegrees*this.translationAmplifierFactor);
+
+        this.ctx.drawImage(this.caseShip.image, 0, 0, length, width);
+        this.ctx.restore();
     }
 
 
@@ -124,8 +129,8 @@ export default class Simulation {
         // get timePoint
         const timePoint = this.caseData.timePoints[this.animationTime];
         // update caseShip parameters
-        this.caseShip.posX = this.meterToPx(timePoint.shipData.posX)*this.translationAmlifierFactor;
-        this.caseShip.posy = this.meterToPx(timePoint.shipData.posY)*this.translationAmlifierFactor;
+        this.caseShip.setPosX(this.meterToPx(timePoint.shipData.posX)*this.translationAmplifierFactor);
+        this.caseShip.setPosY(this.meterToPx(timePoint.shipData.posY)*this.translationAmplifierFactor);
         this.caseShip.rotationInDegrees = timePoint.shipData.rotation;
         // clear screen
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);

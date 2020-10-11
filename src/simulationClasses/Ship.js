@@ -10,6 +10,8 @@ export default class Ship {
         this.posX = 0;
         this.posY = 0;
         this.rotationInDegrees = 0;
+        
+        this.displacementLimitToBeStaticInPx = 0.0001;
 
 
         this.type = type;
@@ -57,6 +59,10 @@ export default class Ship {
 
     setPosX(posX) {
         this.posX = posX;
+        if(Math.abs(this.posX - posX) > this.displacementLimitToBeStaticInPx ) {
+            console.log('is moving!')
+            this.setImageToMoving();
+        }
     }
 
     setPosY(posY) {
