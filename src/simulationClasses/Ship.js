@@ -1,5 +1,5 @@
 import containerBig from '../../assets/images/container_400_63.png'
-import containerBigMoving from '../../assets/images/container_400_63-moving.svg'
+import containerBigMoving from '../../assets/images/container_400_63-moving.png'
 
 
 export default class Ship {
@@ -11,11 +11,48 @@ export default class Ship {
         this.posY = 0;
         this.rotationInDegrees = 0;
 
+
         this.type = type;
-        this.image = containerBig;
-        this.imageMoving = containerBigMoving
-        // if (this.type === 'container') {
-        // }
+        this.image;
+
+        this.imageStatic = new Image();
+        this.imageStatic.src = containerBig;
+        this.imageStaticIsLoaded = false;
+
+        this.imageMoving = new Image();
+        this.imageMoving.src = containerBigMoving;
+        this.imageMovingIsLoaded = false;
+    }
+
+    async loadImage() {
+        return new Promise((resolve, reject) => {
+
+            this.imageStatic.onload = function(){
+                this.imageStaticIsLoaded = true;
+                console.log('Ship imageStatic loaded');
+                if (this.imageStaticIsLoaded && this.imageMovingIsLoaded) {
+                    // if both are loaded set image to static image
+                    this.setImageToStatic();
+                    resolve();
+                }
+            }.bind(this);
+
+            this.imageMoving.onload = function(){
+                this.imageMovingIsLoaded = true;
+                console.log('Ship imageMoving loaded');
+                if (this.imageStaticIsLoaded && this.imageMovingIsLoaded) {
+                    this.setImageToStatic();
+                    resolve();
+                }
+            }.bind(this);
+        });
+    }
+
+    setImageToMoving(){
+        this.image = this.imageMoving;
+    }
+    setImageToStatic(){
+        this.image = this.imageStatic;
     }
 
     setPosX(posX) {

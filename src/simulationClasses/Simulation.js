@@ -74,7 +74,7 @@ export default class Simulation {
         this.originY = posY;
     }
 
-    addShip(shipInfo, isCaseShip=false) {
+    async addShip(shipInfo, isCaseShip=false) {
         const newShip = new Ship(
             shipInfo.type, 
             shipInfo.width, 
@@ -82,7 +82,8 @@ export default class Simulation {
             shipInfo.distanceFromKaai
         );
         if (isCaseShip) {
-            this.caseShip = newShip
+            this.caseShip = newShip;
+            await this.caseShip.loadImage();
             // set origin relative to distance from kaai
             this.setOrigin(
                 this.originX,
@@ -92,6 +93,7 @@ export default class Simulation {
             );
         } else {
             this.passingShip = newShip;
+            await this.passingShip.loadImage();
         }
     }
 
@@ -114,14 +116,7 @@ export default class Simulation {
             width
         );
 
-        const image = new Image();
-        // image.onload = function(){
-        //     this.ctx.drawImage(this, canvasCoords.x,canvasCoords.y);
-        // }
-        image.src = this.caseShip.image;
-        this.ctx.drawImage(image, canvasCoords.x,canvasCoords.y, length, width);
-
-        // this.ctx.fillRect(canvasCoords.x, canvasCoords.y, length, width);
+        this.ctx.drawImage(this.caseShip.image, canvasCoords.x,canvasCoords.y, length, width);
     }
 
 
