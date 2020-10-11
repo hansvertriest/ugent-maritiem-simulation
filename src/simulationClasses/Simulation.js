@@ -1,7 +1,7 @@
 import Ship from "./Ship";
 
-export default class Animation {
-    constructor( width, height ) {
+export default class Simulation {
+    constructor( width, height, data ) {
         // create canvas element
         this.canvas = document.createElement('canvas');
         this.canvas.setAttribute('height', height.toString());
@@ -12,10 +12,15 @@ export default class Animation {
         this.ctx = this.canvas.getContext("2d");
 
 
-        this.meterToPxFactor = 0.5 // 1 meter = 1.5 px
+        this.meterToPxFactor = 1.8 // 1 meter = 1.5 px
         this.kaaiHeight = 50;
         this.originX = this.canvas.width/2;
         this.originY = this.canvas.height/2;
+
+        this.caseData = data;
+        this.animationTime = 0;
+        this.animationTimeInterval = 20;
+        this.animationPlaying = false;
     }
 
     init() {
@@ -33,6 +38,23 @@ export default class Animation {
             x: canvasCoordX,
             y: canvasCoordY,
         }
+    }
+
+    setNextAnimationTime() {
+        this.animationTime += this.animationTimeInterval;
+    }
+
+    getNextAnimationTime() {
+        return this.animationTime + this.animationTimeInterval;
+    }
+
+    play() {
+        this.animationPlaying = true;
+        window.requestAnimationFrame(this.doAnimation.bind(this));
+    }
+
+    pause() {
+        this.animationPlaying = false;
     }
 
     setBackgroundColor(color) {
@@ -84,6 +106,33 @@ export default class Animation {
         );
 
         this.ctx.fillRect(canvasCoords.x, canvasCoords.y, length, width);
+    }
+
+
+    doAnimation() {
+        // get timePoint
+        const timePoint = this.caseData.timePoints[this.animationTime];
+        // update caseShip parameters
+        this.caseShip.posX = this.meterToPx(timePoint.shipData.posX);
+        this.caseShip.posy = this.meterToPx(timePoint.shipData.posY);
+        this.caseShip.rotationInDegrees = timePoint.shipData.rotation;
+        // clear screen
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // drawElements
+        this.setBackgroundColor('green');
+        this.drawKaai();
+        this.drawCaseShip();
+
+        // check if animation is done
+        if (this.getNextAnimationTime() >= this.caseData.timePoints.length) {
+            this.pause();
+            console.log(this.animationPlaying);
+        } else if (this.animationPlaying) {
+            // set next animationTime
+            this.setNextAnimationTime();
+            window.requestAnimationFrame(this.doAnimation.bind(this));
+        }
     }
 
 }

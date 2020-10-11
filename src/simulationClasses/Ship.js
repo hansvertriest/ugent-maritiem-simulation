@@ -6,6 +6,7 @@ export default class Ship {
         this.distanceFromKaai = distanceFromKaai;
         this.posX = 0;
         this.posY = 0;
+        this.rotationInDegrees = 0;
     }
 
     setPosX(posX) {

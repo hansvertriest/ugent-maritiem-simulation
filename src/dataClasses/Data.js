@@ -27,9 +27,9 @@ export default class Data {
                 // create timePoint
                 const timePoint = new TimePoint(
                     timePointHawserData, 
-                    shipTranslation[time][0],
-                    shipTranslation[time][1],
-                    shipTranslation[time][2],
+                    Number(shipTranslation[time][0].replace(',','.')),
+                    Number(shipTranslation[time][1].replace(',','.')),
+                    Number(shipTranslation[time][2].replace(',','.')),
                 )
 
                 // add timePoint to timePoints
