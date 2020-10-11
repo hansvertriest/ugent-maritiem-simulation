@@ -10,20 +10,26 @@ export default class Simulation {
         document.body.appendChild(this.canvas);
 
         this.ctx = this.canvas.getContext("2d");
+        this.backgroundColor = "#c1e6fb";
 
 
         this.meterToPxFactor = 1.8 // 1 meter = 1.5 px
-        this.kaaiHeight = 50;
+        this.kaaiHeight = 100;
         this.originX = this.canvas.width/2;
         this.originY = this.canvas.height/2;
 
         this.caseData = data;
         this.animationTime = 0;
-        this.animationTimeInterval = 20;
+        this.animationTimeInterval = 10;
         this.animationPlaying = false;
+
+        // variables for improving visual message
+        this.translationAmlifierFactor = 2;
+        this.distanceToKaaiInMeter = -40;
     }
 
     init() {
+        this.setBackgroundColor();
         this.drawKaai();
     }
 
@@ -57,8 +63,9 @@ export default class Simulation {
         this.animationPlaying = false;
     }
 
-    setBackgroundColor(color) {
-        this.ctx.fillStyle = color;
+    setBackgroundColor(color=this.backgroundColor) {
+        this.backgroundColor = color;
+        this.ctx.fillStyle = this.backgroundColor;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -76,11 +83,13 @@ export default class Simulation {
         );
         if (isCaseShip) {
             this.caseShip = newShip
+            // set origin relative to distance from kaai
             this.setOrigin(
                 this.originX,
-                this.canvas.height - this.meterToPx(this.kaaiHeight) + this.meterToPx(this.caseShip.distanceFromKaai)
+                (this.distanceToKaaiInMeter === 0) 
+                    ? this.canvas.height - this.meterToPx(this.kaaiHeight) + this.meterToPx(this.caseShip.distanceFromKaai)
+                    : this.canvas.height - this.meterToPx(this.kaaiHeight) + this.meterToPx(this.distanceToKaaiInMeter)
             );
-            console.log(this.originY);
         } else {
             this.passingShip = newShip;
         }
@@ -96,7 +105,7 @@ export default class Simulation {
     drawCaseShip() {
         const length = this.meterToPx(this.caseShip.length);
         const width = this.meterToPx(this.caseShip.width);
-        this.ctx.fillStyle = "orange";
+        // this.ctx.fillStyle = "orange";
 
         const canvasCoords = this.originToCanvasCoords(
             this.caseShip.posX, 
@@ -105,7 +114,14 @@ export default class Simulation {
             width
         );
 
-        this.ctx.fillRect(canvasCoords.x, canvasCoords.y, length, width);
+        const image = new Image();
+        // image.onload = function(){
+        //     this.ctx.drawImage(this, canvasCoords.x,canvasCoords.y);
+        // }
+        image.src = this.caseShip.image;
+        this.ctx.drawImage(image, canvasCoords.x,canvasCoords.y, length, width);
+
+        // this.ctx.fillRect(canvasCoords.x, canvasCoords.y, length, width);
     }
 
 
@@ -113,21 +129,20 @@ export default class Simulation {
         // get timePoint
         const timePoint = this.caseData.timePoints[this.animationTime];
         // update caseShip parameters
-        this.caseShip.posX = this.meterToPx(timePoint.shipData.posX);
-        this.caseShip.posy = this.meterToPx(timePoint.shipData.posY);
+        this.caseShip.posX = this.meterToPx(timePoint.shipData.posX)*this.translationAmlifierFactor;
+        this.caseShip.posy = this.meterToPx(timePoint.shipData.posY)*this.translationAmlifierFactor;
         this.caseShip.rotationInDegrees = timePoint.shipData.rotation;
         // clear screen
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // drawElements
-        this.setBackgroundColor('green');
+        this.setBackgroundColor();
         this.drawKaai();
         this.drawCaseShip();
 
         // check if animation is done
         if (this.getNextAnimationTime() >= this.caseData.timePoints.length) {
             this.pause();
-            console.log(this.animationPlaying);
         } else if (this.animationPlaying) {
             // set next animationTime
             this.setNextAnimationTime();

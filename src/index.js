@@ -2,6 +2,14 @@ import metaData from './caseMetaData';
 import { Data } from './dataClasses';
 import { Simulation } from './simulationClasses';
 
+import containerBig from '../assets/images/container_400_63.svg'
+
+// test if svg works
+// const img = document.createElement('img');
+// img.setAttribute('src', containerBig);
+// document.body.appendChild(img);
+
+
 // Load in data
 
 import dataCoordsCSV from '../assets/dataCoords.csv' // collums => arrays
@@ -24,9 +32,9 @@ const shipTranslations = dataForcesCSV.map((timePoint) => {
 const data = new Data(metaData.bolderData);
 data.addTimePoints(dataCoordsCSV, dataForcesCSV, shipTranslations);
 console.log(data);
+
 // SIMULATION
-const simulation = new Simulation(800,600, data);
-simulation.setBackgroundColor("green");
+const simulation = new Simulation(1000,600, data);
 simulation.init();
 simulation.addShip(metaData.caseShip, true);
 simulation.drawCaseShip();
