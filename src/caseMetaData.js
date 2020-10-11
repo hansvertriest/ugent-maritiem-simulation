@@ -1,82 +1,107 @@
-export default [
-    {
-        posXKaai: -250,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
+export default {
+    caseShip: {
+        type: 'container',
+        length: 400,
+        width: 58.6,
+        distanceFromKaai: -30,
     },
-    {
-        posXKaai: -250,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
+    passingShip: {
+        present: true,
+        type: 'container',
+        length: 400,
+        width: 58.6,
+        amountOfShipWidth: 4,
+        speedInKnots: 6,
     },
-    {
-        posXKaai: -230,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
+    wind: {
+        present: true,
+        directionInDegrees: 30,
+        speedInMPerS: 18,
     },
-    {
-        posXKaai: -230,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
+    hawsersLimits: {
+        limitOne: 0.6, // red
+        limitTwo: 0.5 // organge
     },
-    {
-        posXKaai: -210,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: -210,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: -150,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: -150,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 150,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 150,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 190,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 190,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 210,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 210,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 230,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    },
-    {
-        posXKaai: 230,
-        posYKaai: -32.3,
-        forceLimit: 1373400,
-    }
-]
+    bolderData: [
+        {
+            posX: -250,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: -250,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: -230,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: -230,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: -210,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: -210,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: -150,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: -150,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 150,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 150,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 190,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 190,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 210,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 210,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 230,
+            posY: -32.3,
+            forceLimit: 1373400,
+        },
+        {
+            posX: 230,
+            posY: -32.3,
+            forceLimit: 1373400,
+        }
+    ]
+}

@@ -1,7 +1,7 @@
 var path = require('path');
 
+
 module.exports = {
-  //...
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
@@ -14,6 +14,10 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      },
       {
         test: /\.css$/,
         use: [
