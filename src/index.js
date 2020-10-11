@@ -31,6 +31,7 @@ const appInit = async () => {
     const simulation = new Simulation(1000,600, data);
     simulation.init();
     await simulation.addShip(metaData.caseShip, true);
+    simulation.addHawsers(metaData.bolderData, metaData.hawsersLimits);
     simulation.drawCaseShip();
     simulation.play();
 }

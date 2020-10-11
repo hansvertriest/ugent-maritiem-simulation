@@ -1,4 +1,5 @@
 import Ship from "./Ship";
+import Hawser from "./Hawser";
 
 export default class Simulation {
     constructor( width, height, data ) {
@@ -13,7 +14,7 @@ export default class Simulation {
         this.backgroundColor = "#c1e6fb";
 
 
-        this.meterToPxFactor = 1.8 // 1 meter = 1.5 px
+        this.meterToPxFactor = 2;
         this.kaaiHeight = 100;
         this.originX = this.canvas.width/2;
         this.originY = this.canvas.height/2;
@@ -24,8 +25,11 @@ export default class Simulation {
         this.animationPlaying = false;
 
         // variables for improving visual message
-        this.translationAmplifierFactor = 10;
-        this.distanceToKaaiInMeter = -40;
+        this.translationAmplifierFactor = 1;
+        this.distanceToKaaiInMeter = 0;
+
+        // hawser data 
+        this.hawserArray = [];
     }
 
     init() {
@@ -37,9 +41,9 @@ export default class Simulation {
         return distance*this.meterToPxFactor;
     }
 
-    originToCanvasCoords(originCoordX, originCoordY, width, height) {
-        const canvasCoordX =  this.originX + originCoordX - (width/2);
-        const canvasCoordY =  this.originY + originCoordY - (height/2);
+    originToCanvasCoords(originCoordX, originCoordY, width=0, height=0) {
+        const canvasCoordX =  this.originX - originCoordX - (width/2);
+        const canvasCoordY =  this.originY - originCoordY - (height/2);
         return {
             x: canvasCoordX,
             y: canvasCoordY,
@@ -87,7 +91,7 @@ export default class Simulation {
             // set origin relative to distance from kaai
             this.setOrigin(
                 this.originX,
-                (this.distanceToKaaiInMeter === 0) 
+                (this.distanceToKaaiInMeter == 0) 
                     ? this.canvas.height - this.meterToPx(this.kaaiHeight) + this.meterToPx(this.caseShip.distanceFromKaai)
                     : this.canvas.height - this.meterToPx(this.kaaiHeight) + this.meterToPx(this.distanceToKaaiInMeter)
             );
@@ -95,6 +99,42 @@ export default class Simulation {
             this.passingShip = newShip;
             await this.passingShip.loadImage();
         }
+    }
+
+    addHawsers(bolderData, hawserLimits) {
+        // loop over all bolders and add a Hawser object to hawserArray
+        bolderData.forEach((bolder) => {
+            const hawser = new Hawser(
+                bolder.posX,
+                bolder.posY,
+                bolder.forceLimit,
+                hawserLimits
+            );
+            this.hawserArray.push(hawser);
+        });
+        console.log(this.hawserArray)
+    }
+
+    drawHawsers() {
+        this.hawserArray.forEach((hawser) => {
+            // get coordinates
+            const canvasCoordsBolder = this.originToCanvasCoords(
+                this.meterToPx(hawser.bolderPosX), 
+                this.meterToPx(hawser.bolderPosY), 
+            );
+            const canvasCoordsHawser = this.originToCanvasCoords(
+                this.meterToPx(hawser.posOnShipX), 
+                this.meterToPx(hawser.posOnShipY), 
+            );
+
+            this.ctx.beginPath();
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeStyle = hawser.getHawserColor();
+            this.ctx.moveTo(canvasCoordsBolder.x, canvasCoordsBolder.y);
+            this.ctx.lineTo(canvasCoordsHawser.x, canvasCoordsHawser.y);
+            this.ctx.stroke();
+            this.ctx.closePath();
+        });
     }
 
     drawKaai() {
@@ -109,11 +149,14 @@ export default class Simulation {
         const width = this.meterToPx(this.caseShip.width);
         
         const canvasCoords = this.originToCanvasCoords(
-            this.caseShip.posX, 
-            this.caseShip.posY, 
+            this.meterToPx(this.caseShip.posX), 
+            this.meterToPx(this.caseShip.posY), 
             length,
             width
         );
+
+        // this.ctx.fillStyle = 'orange';
+        // this.ctx.fillRect(canvasCoords.x,canvasCoords.y, length, width)
 
         // rotate context to draw the rotation of the ship
         this.ctx.save();
@@ -128,10 +171,20 @@ export default class Simulation {
     doAnimation() {
         // get timePoint
         const timePoint = this.caseData.timePoints[this.animationTime];
+
         // update caseShip parameters
-        this.caseShip.setPosX(this.meterToPx(timePoint.shipData.posX)*this.translationAmplifierFactor);
-        this.caseShip.setPosY(this.meterToPx(timePoint.shipData.posY)*this.translationAmplifierFactor);
+        this.caseShip.setPosX(timePoint.shipData.posX)*this.translationAmplifierFactor;
+        this.caseShip.setPosY(timePoint.shipData.posY)*this.translationAmplifierFactor;
         this.caseShip.rotationInDegrees = timePoint.shipData.rotation;
+
+        // update hawsers parameters
+
+        this.hawserArray.forEach((hawser,index) => {
+            hawser.setPosOnShipX(timePoint.hawserData[index].posXShip);
+            hawser.setPosOnShipY(timePoint.hawserData[index].posYShip);
+            hawser.setCurrentLoad(timePoint.hawserData[index].force);
+        });
+
         // clear screen
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -139,6 +192,7 @@ export default class Simulation {
         this.setBackgroundColor();
         this.drawKaai();
         this.drawCaseShip();
+        this.drawHawsers();
 
         // check if animation is done
         if (this.getNextAnimationTime() >= this.caseData.timePoints.length) {

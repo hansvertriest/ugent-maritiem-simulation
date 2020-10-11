@@ -16,9 +16,9 @@ export default class Data {
                 for (let hawser = 0; hawser < this.bolderData.length; hawser ++) {
                     // make hawserData object
                     const hawserData = new HawserData(
-                        dataCoords[time][(hawser*2)],
-                        dataCoords[time][(hawser*2) + 1],
-                        dataForces[time][hawser]
+                        Number(dataCoords[time][(hawser*2)].replace(',','.')),
+                        Number(dataCoords[time][(hawser*2) + 1].replace(',','.')),
+                        Number(dataForces[time][hawser].replace(',','.'))
                     );
                     // Add hawserData data to timePointHawserData
                     timePointHawserData.push(hawserData);

@@ -19,8 +19,8 @@ export default {
         speedInMPerS: 18,
     },
     hawsersLimits: {
-        limitOne: 0.6, // red
-        limitTwo: 0.5 // organge
+        red: 0.6, // red
+        orange: 0.5 // organge
     },
     bolderData: [
         {
