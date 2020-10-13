@@ -29,7 +29,6 @@ export default class Hawser {
 
     getHawserColor() {
         const ratio = this.currentLoad / this.forceLimit;
-        console.log(this.currentLoad/this.forceLimit);
         if (ratio > this.limit.orange && ratio <= this.limit.red) {
             return this.orange;
         } else if ( ratio > this.limit.red) {

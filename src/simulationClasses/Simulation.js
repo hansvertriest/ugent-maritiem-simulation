@@ -1,20 +1,26 @@
 import Ship from "./Ship";
 import Hawser from "./Hawser";
+import SimulationContext from "./SimulationContext";
 
 export default class Simulation {
     constructor( width, height, data ) {
         // create canvas element
-        this.canvas = document.createElement('canvas');
-        this.canvas.setAttribute('height', height.toString());
-        this.canvas.setAttribute('width', width.toString());
-        this.canvas.setAttribute('id', "animation-canvas");
-        document.body.appendChild(this.canvas);
+        // this.canvas = document.createElement('canvas');
+        // this.canvas.setAttribute('height', height.toString());
+        // this.canvas.setAttribute('width', width.toString());
+        // this.canvas.setAttribute('id', "animation-canvas");
+        // document.body.appendChild(this.canvas);
 
-        this.ctx = this.canvas.getContext("2d");
+        // this.ctx = this.canvas.getContext("2d");
+
+        this.simCtx = new SimulationContext(width, height);
+        this.canvas = this.simCtx.canvas;
+        this.ctx = this.simCtx.ctx;
+
         this.backgroundColor = "#c1e6fb";
 
 
-        this.meterToPxFactor = 2;
+        // this.simCtx.meterToPxFactor = 2;
         this.kaaiHeight = 100;
         this.originX = this.canvas.width/2;
         this.originY = this.canvas.height/2;
@@ -25,7 +31,7 @@ export default class Simulation {
         this.animationPlaying = false;
 
         // variables for improving visual message
-        this.translationAmplifierFactor = 1;
+        this.translationAmplifierFactor = 20;
         this.distanceToKaaiInMeter = 0;
 
         // hawser data 
@@ -37,9 +43,9 @@ export default class Simulation {
         this.drawKaai();
     }
 
-    meterToPx(distance) {
-        return distance*this.meterToPxFactor;
-    }
+    // meterToPx(distance) {
+    //     return distance*this.simCtx.meterToPxFactor;
+    // }
 
     originToCanvasCoords(originCoordX, originCoordY, width=0, height=0) {
         const canvasCoordX =  this.originX - originCoordX - (width/2);
@@ -73,10 +79,10 @@ export default class Simulation {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    setOrigin(posX, posY) {
-        this.originX = posX;
-        this.originY = posY;
-    }
+    // setOrigin(posX, posY) {
+    //     this.originX = posX;
+    //     this.originY = posY;
+    // }
 
     async addShip(shipInfo, isCaseShip=false) {
         const newShip = new Ship(
@@ -89,11 +95,11 @@ export default class Simulation {
             this.caseShip = newShip;
             await this.caseShip.loadImage();
             // set origin relative to distance from kaai
-            this.setOrigin(
+            this.simCtx.setOrigin(
                 this.originX,
                 (this.distanceToKaaiInMeter == 0) 
-                    ? this.canvas.height - this.meterToPx(this.kaaiHeight) + this.meterToPx(this.caseShip.distanceFromKaai)
-                    : this.canvas.height - this.meterToPx(this.kaaiHeight) + this.meterToPx(this.distanceToKaaiInMeter)
+                    ? this.canvas.height - this.simCtx.meterToPx(this.kaaiHeight) + this.simCtx.meterToPx(this.caseShip.distanceFromKaai)
+                    : this.canvas.height - this.simCtx.meterToPx(this.kaaiHeight) + this.simCtx.meterToPx(this.distanceToKaaiInMeter)
             );
         } else {
             this.passingShip = newShip;
@@ -118,13 +124,13 @@ export default class Simulation {
     drawHawsers() {
         this.hawserArray.forEach((hawser) => {
             // get coordinates
-            const canvasCoordsBolder = this.originToCanvasCoords(
-                this.meterToPx(hawser.bolderPosX), 
-                this.meterToPx(hawser.bolderPosY), 
+            const canvasCoordsBolder = this.simCtx.originToCanvasCoords(
+                this.simCtx.meterToPx(hawser.bolderPosX), 
+                this.simCtx.meterToPx(hawser.bolderPosY), 
             );
-            const canvasCoordsHawser = this.originToCanvasCoords(
-                this.meterToPx(hawser.posOnShipX), 
-                this.meterToPx(hawser.posOnShipY), 
+            const canvasCoordsHawser = this.simCtx.originToCanvasCoords(
+                this.simCtx.meterToPx(hawser.posOnShipX), 
+                this.simCtx.meterToPx(hawser.posOnShipY), 
             );
 
             this.ctx.beginPath();
@@ -138,19 +144,19 @@ export default class Simulation {
     }
 
     drawKaai() {
-        const height = this.meterToPx(this.kaaiHeight);
+        const height = this.simCtx.meterToPx(this.kaaiHeight);
         const width = this.canvas.width;
         this.ctx.fillStyle = "blue";
         this.ctx.fillRect(0, this.canvas.height - height, width, height);
     }
 
     drawCaseShip() {
-        const length = this.meterToPx(this.caseShip.length);
-        const width = this.meterToPx(this.caseShip.width);
+        const length = this.simCtx.meterToPx(this.caseShip.length);
+        const width = this.simCtx.meterToPx(this.caseShip.width);
         
-        const canvasCoords = this.originToCanvasCoords(
-            this.meterToPx(this.caseShip.posX), 
-            this.meterToPx(this.caseShip.posY), 
+        const canvasCoords = this.simCtx.originToCanvasCoords(
+            this.simCtx.meterToPx(this.caseShip.posX), 
+            this.simCtx.meterToPx(this.caseShip.posY), 
             length,
             width
         );
