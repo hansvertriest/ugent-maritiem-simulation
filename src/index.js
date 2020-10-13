@@ -30,6 +30,7 @@ const appInit = async () => {
     // SIMULATION
     const simulation = new Simulation(1000,600, data);
     simulation.init();
+    simulation.registerControls();
     await simulation.addShip(metaData.caseShip, true);
     simulation.addHawsers(metaData.bolderData, metaData.hawsersLimits);
     simulation.drawCaseShip();

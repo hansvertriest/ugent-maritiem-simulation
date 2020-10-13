@@ -28,7 +28,6 @@ export default class Ship {
 
     async loadImage() {
         return new Promise((resolve, reject) => {
-
             this.imageStatic.onload = function(){
                 this.imageStaticIsLoaded = true;
                 console.log('Ship imageStatic loaded');
@@ -48,6 +47,29 @@ export default class Ship {
                 }
             }.bind(this);
         });
+    }
+
+    draw(simCtx) {
+        const length = simCtx.meterToPx(this.length);
+        const width = simCtx.meterToPx(this.width);
+        
+        const canvasCoords = simCtx.originToCanvasCoords(
+            simCtx.meterToPx(this.posX), 
+            simCtx.meterToPx(this.posY), 
+            length,
+            width
+        );
+
+        // this.ctx.fillStyle = 'orange';
+        // this.ctx.fillRect(canvasCoords.x,canvasCoords.y, length, width)
+
+        // rotate context to draw the rotation of the ship
+        simCtx.ctx.save();
+        simCtx.ctx.translate(canvasCoords.x,canvasCoords.y);
+        simCtx.ctx.rotate(this.rotationInDegrees*this.translationAmplifierFactor);
+
+        simCtx.ctx.drawImage(this.image, 0, 0, length, width);
+        simCtx.ctx.restore();
     }
 
     setImageToMoving(){

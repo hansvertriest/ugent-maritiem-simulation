@@ -16,8 +16,17 @@ export default class SimulationContext {
         this.originY = posY;
     }
 
+    moveOrigin(offsetX, offsetY) {
+        this.originX += offsetX;
+        this.originY += offsetY;
+    }
+
     meterToPx(distance) {
         return distance*this.meterToPxFactor;
+    }
+
+    pxToMeter(distance) {
+        return distance/this.meterToPxFactor;
     }
 
     originToCanvasCoords(originCoordX, originCoordY, width=0, height=0) {

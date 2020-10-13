@@ -5,8 +5,8 @@ export default class Hawser {
         this.forceLimit = forceLimit;
         this.limit = limits;
 
-        this.posOnShipX;
-        this.posOnShipY;
+        this.posOnShipX = 0;
+        this.posOnShipY = 0;
         this.currentLoad;
 
         // colors 
@@ -15,11 +15,31 @@ export default class Hawser {
         this.red = 'red';
     }
 
-    setPosOnShipX(posX) {
+    draw(simCtx) {
+        // get coordinates
+        const canvasCoordsBolder = simCtx.originToCanvasCoords(
+            simCtx.meterToPx(this.bolderPosX), 
+            simCtx.meterToPx(this.bolderPosY), 
+        );
+        const canvasCoordsHawser = simCtx.originToCanvasCoords(
+            simCtx.meterToPx(this.posOnShipX), 
+            simCtx.meterToPx(this.posOnShipY), 
+        );
+
+        simCtx.ctx.beginPath();
+        simCtx.ctx.lineWidth = 2;
+        simCtx.ctx.strokeStyle = this.getHawserColor();
+        simCtx.ctx.moveTo(canvasCoordsBolder.x, canvasCoordsBolder.y);
+        simCtx.ctx.lineTo(canvasCoordsHawser.x, canvasCoordsHawser.y);
+        simCtx.ctx.stroke();
+        simCtx.ctx.closePath();
+    }
+
+    setPosOnShipX(posX, amplification) {
         this.posOnShipX = posX;
     }
 
-    setPosOnShipY(posY) {
+    setPosOnShipY(posY, amplification) {
         this.posOnShipY = posY;
     }
 
