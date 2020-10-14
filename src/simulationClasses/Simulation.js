@@ -22,7 +22,7 @@ export default class Simulation {
         this.animationPlaying = false;
 
         // variables for improving visual message
-        this.translationAmplifierFactor = 1;
+        this.translationAmplifierFactor = 10;
         this.distanceToKaaiInMeter = 0;
 
         // hawser data 
@@ -154,10 +154,9 @@ export default class Simulation {
         // update caseShip parameters
         this.caseShip.setPosX(timePoint.shipData.posX*this.translationAmplifierFactor);
         this.caseShip.setPosY(timePoint.shipData.posY*this.translationAmplifierFactor);
-        this.caseShip.rotationInDegrees = timePoint.shipData.rotation;
+        this.caseShip.rotationInDegrees = timePoint.shipData.rotation*this.translationAmplifierFactor;
 
         // update hawsers parameters
-
         this.hawserArray.forEach((hawser,index) => {
             hawser.setPosOnShipX(timePoint.hawserData[index].posXShip, this.translationAmplifierFactor);
             hawser.setPosOnShipY(timePoint.hawserData[index].posYShip, this.translationAmplifierFactor);

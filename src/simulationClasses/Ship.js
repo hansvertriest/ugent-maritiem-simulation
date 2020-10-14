@@ -66,7 +66,7 @@ export default class Ship {
         // rotate context to draw the rotation of the ship
         simCtx.ctx.save();
         simCtx.ctx.translate(canvasCoords.x,canvasCoords.y);
-        simCtx.ctx.rotate(this.rotationInDegrees*this.translationAmplifierFactor);
+        simCtx.ctx.rotate(this.rotationInDegrees);
 
         simCtx.ctx.drawImage(this.image, 0, 0, length, width);
         simCtx.ctx.restore();
