@@ -22,7 +22,7 @@ export default class Simulation {
         this.animationPlaying = false;
 
         // variables for improving visual message
-        this.translationAmplifierFactor = 10;
+        this.translationAmplifierFactor = 1;
         this.distanceToKaaiInMeter = 0;
 
         // hawser data 
