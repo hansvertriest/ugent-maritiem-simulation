@@ -1,16 +1,16 @@
-import metaData from './caseMetaData';
+import metaData from './caseMetaData2';
 import { Data } from './dataClasses';
 import { Simulation } from './simulationClasses';
 
 // Load in data
 
-import dataCoordsCSV from '../assets/dataCoords.csv' // collums => arrays
-import dataForcesCSV from '../assets/dataForces.csv'// collums => arrays
+import dataCoordsCSV from '../assets/dataCoords2.csv' // collums => arrays
+import dataForcesCSV from '../assets/dataForces2.csv'// collums => arrays
 
 const appInit = async () => {
     
     // remove header
-    dataForcesCSV.shift();
+    // dataForcesCSV.shift();
     
     // get shipTranslation data
     const shipTranslations = dataForcesCSV.map((timePoint) => {

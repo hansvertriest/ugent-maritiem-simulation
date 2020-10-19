@@ -18,7 +18,7 @@ export default class Simulation {
 
         this.caseData = data;
         this.animationTime = 0;
-        this.animationTimeInterval = 20;
+        this.animationTimeInterval = 10;
         this.animationPlaying = false;
 
         // variables for improving visual message

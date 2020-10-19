@@ -59,15 +59,19 @@ export default class Ship {
             length,
             width
         );
-
-        // this.ctx.fillStyle = 'orange';
-        // this.ctx.fillRect(canvasCoords.x,canvasCoords.y, length, width)
+        
 
         // rotate context to draw the rotation of the ship
         simCtx.ctx.save();
         simCtx.ctx.translate(canvasCoords.x,canvasCoords.y);
         simCtx.ctx.rotate(this.rotationInDegrees);
+        console.log(this.rotationInDegrees)
 
+        // draw orange placeholder
+        simCtx.ctx.fillStyle = 'orange';
+        simCtx.ctx.fillRect(0, 0, length, width)
+
+        // draw image of ship
         simCtx.ctx.drawImage(this.image, 0, 0, length, width);
         simCtx.ctx.restore();
     }

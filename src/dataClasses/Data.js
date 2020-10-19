@@ -10,7 +10,7 @@ export default class Data {
     async addTimePoints( dataCoords, dataForces, shipTranslation ) {
         return new Promise((resolve, reject) => {
             // loop over timestamps
-            for (let time = 0; time < dataCoords.length; time ++) {
+            for (let time = 0; time < dataCoords.length -1; time ++) {
                 // loop over hawsers and add every hawserData to the timePointHawserData
                 const timePointHawserData = [];
                 for (let hawser = 0; hawser < this.bolderData.length; hawser ++) {
