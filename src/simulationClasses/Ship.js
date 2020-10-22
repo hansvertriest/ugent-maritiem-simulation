@@ -54,10 +54,10 @@ export default class Ship {
         const width = simCtx.meterToPx(this.width);
         
         const canvasCoords = simCtx.originToCanvasCoords(
-            simCtx.meterToPx(this.posX), 
-            simCtx.meterToPx(this.posY), 
-            length,
-            width
+            this.posX, 
+            this.posY, 
+            this.length,
+            this.width
         );
         
 
@@ -65,7 +65,6 @@ export default class Ship {
         simCtx.ctx.save();
         simCtx.ctx.translate(canvasCoords.x,canvasCoords.y);
         simCtx.ctx.rotate(this.rotationInDegrees);
-        console.log(this.rotationInDegrees)
 
         // draw orange placeholder
         simCtx.ctx.fillStyle = 'orange';

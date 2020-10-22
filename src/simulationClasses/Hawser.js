@@ -18,12 +18,12 @@ export default class Hawser {
     draw(simCtx) {
         // get coordinates
         const canvasCoordsBolder = simCtx.originToCanvasCoords(
-            simCtx.meterToPx(this.bolderPosX), 
-            simCtx.meterToPx(this.bolderPosY), 
+            this.bolderPosX, 
+            this.bolderPosY, 
         );
         const canvasCoordsHawser = simCtx.originToCanvasCoords(
-            simCtx.meterToPx(this.posOnShipX), 
-            simCtx.meterToPx(this.posOnShipY), 
+            this.posOnShipX, 
+            this.posOnShipY, 
         );
 
         simCtx.ctx.beginPath();

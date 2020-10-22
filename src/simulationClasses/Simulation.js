@@ -1,5 +1,6 @@
 import Ship from "./Ship";
 import Hawser from "./Hawser";
+import Fender from "./Fender";
 import SimulationContext from "./SimulationContext";
 
 export default class Simulation {
@@ -27,6 +28,7 @@ export default class Simulation {
 
         // hawser data 
         this.hawserArray = [];
+        this.fenderArray = [];
 
         // controll variables
         this.mouseX;
@@ -39,7 +41,6 @@ export default class Simulation {
         window.addEventListener('mouseup', () => this.mouseIsDown = false)
         window.addEventListener('mousemove', (e) => {
             if (this.mouseIsDown) {
-                console.log(e);
                 if (!this.mouseX) this.mouseX = e.x;
                 if (!this.mouseY) this.mouseY = e.y;
                 this.kaaiHeight -= this.simCtx.pxToMeter(e.y - this.mouseY);
@@ -56,15 +57,6 @@ export default class Simulation {
     init() {
         this.setBackgroundColor();
         this.drawKaai();
-    }
-
-    originToCanvasCoords(originCoordX, originCoordY, width=0, height=0) {
-        const canvasCoordX =  this.originX - originCoordX - (width/2);
-        const canvasCoordY =  this.originY - originCoordY - (height/2);
-        return {
-            x: canvasCoordX,
-            y: canvasCoordY,
-        }
     }
 
     setNextAnimationTime() {
@@ -111,6 +103,26 @@ export default class Simulation {
             this.passingShip = newShip;
             await this.passingShip.loadImage();
         }
+    }
+
+    addFenders(fenderData, fenderLimits) {
+        // loop over all fenders and add a Fender object to fenderArray
+        fenderData.forEach((fender) => {
+            const newFender = new Fender(
+                fender.posX,
+                fender.posY,
+                fender.forceLimit,
+                fenderLimits
+            );
+            this.fenderArray.push(newFender);
+        });
+
+    }
+
+    drawFenders() {
+        this.fenderArray.forEach((fender) => {
+            fender.draw(this.simCtx)
+        });
     }
 
     addHawsers(bolderData, hawserLimits) {
@@ -163,6 +175,11 @@ export default class Simulation {
             hawser.setCurrentLoad(timePoint.hawserData[index].force);
         });
 
+        // update fender currentforce
+        this.fenderArray.forEach((fender, index) => {
+            fender.setCurrentForce(timePoint.fenderData[index].force);
+        });
+
         // clear screen
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -171,6 +188,7 @@ export default class Simulation {
         this.drawKaai();
         this.drawCaseShip();
         this.drawHawsers();
+        this.drawFenders();
 
         // check if animation is done
         if (this.getNextAnimationTime() >= this.caseData.timePoints.length) {
