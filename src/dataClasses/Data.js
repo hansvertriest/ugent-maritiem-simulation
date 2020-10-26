@@ -60,4 +60,8 @@ export default class Data {
         });
     }
 
+    getTimePoint(index) {
+        return this.timePoints[index];
+    }
+
 }

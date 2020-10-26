@@ -52,6 +52,8 @@ export default class Ship {
     draw(simCtx) {
         const length = simCtx.meterToPx(this.length);
         const width = simCtx.meterToPx(this.width);
+        const posXInPx = simCtx.meterToPx(this.posX)*-1;
+        const posYInPx = simCtx.meterToPx(this.posY)*-1;
         
         const canvasCoords = simCtx.originToCanvasCoords(
             this.posX, 
@@ -59,19 +61,26 @@ export default class Ship {
             this.length,
             this.width
         );
-        
 
+        const canvasOrigin = simCtx.originToCanvasCoords(
+            0,
+            0,
+            this.length,
+            this.width)
+
+        
         // rotate context to draw the rotation of the ship
         simCtx.ctx.save();
-        simCtx.ctx.translate(canvasCoords.x,canvasCoords.y);
+        // translate context to origin of simulation
+        simCtx.ctx.translate(simCtx.originX, simCtx.originY);
         simCtx.ctx.rotate(this.rotationInDegrees);
 
         // draw orange placeholder
         simCtx.ctx.fillStyle = 'orange';
-        simCtx.ctx.fillRect(0, 0, length, width)
+        simCtx.ctx.fillRect(posXInPx - (length/2), posYInPx - (width/2), length, width)
 
         // draw image of ship
-        simCtx.ctx.drawImage(this.image, 0, 0, length, width);
+        simCtx.ctx.drawImage(this.image, posXInPx - (length/2), posYInPx - (width/2), length, width);
         simCtx.ctx.restore();
     }
 

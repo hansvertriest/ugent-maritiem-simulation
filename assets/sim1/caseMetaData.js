@@ -23,7 +23,7 @@ export default {
         orange: 0.5 // organge
     },
     fenderLimits: {
-        red: 0.001, // red
+        red: 0.6, // red
         orange: 0.5 // organge
     },
     bolderData: [

@@ -7,7 +7,7 @@ export default class Fender {
 
         this.currentForce;
         this.widthInMeter = 8;
-        this.heightInMeter = 4;
+        this.heightInMeter = 0.25;
 
         // colors 
         this.orange = 'orange';
@@ -27,7 +27,6 @@ export default class Fender {
 
     getFenderColor() {
         const ratio = this.currentForce / this.forceLimit;
-        console.log(ratio);
         if (ratio > this.limitDefinitions.orange && ratio <= this.limitDefinitions.red) {
             return this.orange;
         } else if ( ratio > this.limitDefinitions.red) {

@@ -3,7 +3,7 @@ export default {
         type: 'container',
         length: 366,
         width: 51,
-        distanceFromKaai: -29.25,
+        distanceFromKaai: -25.5,
     },
     passingShip: {
         present: true,

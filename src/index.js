@@ -2,12 +2,11 @@ import { Data } from './dataClasses';
 import { Simulation } from './simulationClasses';
 
 // Load in data
-import metaData from '../assets/sim1/caseMetaData';
-import dataCoordsCSV from '../assets/sim1/dataCoords.csv' // collums => arrays
-import dataForcesCSV from '../assets/sim1/dataForces.csv'// collums => arrays
+import metaData from '../assets/sim2/caseMetaData';
+import dataCoordsCSV from '../assets/sim2/dataCoords.csv' // collums => arrays
+import dataForcesCSV from '../assets/sim2/dataForces.csv'// collums => arrays
 
 const appInit = async () => {
-       
     // get shipTranslation data
     const shipTranslations = dataForcesCSV.map((timePoint) => {
         return timePoint.filter((column, index) => {
@@ -21,7 +20,11 @@ const appInit = async () => {
     // create data object
     const data = new Data(metaData.bolderData, metaData.fenderData);
     data.addTimePoints(dataCoordsCSV, dataForcesCSV, shipTranslations);
-    console.log(data);
+    console.log(data.getTimePoint(0));
+    console.log(data.getTimePoint(1));
+    console.log(data.getTimePoint(2));
+    console.log(data.getTimePoint(3));
+    console.log(data.getTimePoint(4));
     
     // SIMULATION
     const simulation = new Simulation(1000,600, data);
@@ -36,5 +39,3 @@ const appInit = async () => {
 
 
 appInit();
-
-
