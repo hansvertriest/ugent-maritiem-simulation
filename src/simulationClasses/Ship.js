@@ -1,5 +1,6 @@
-import containerBig from '../../assets/images/container_400_63.png'
-import containerBigMoving from '../../assets/images/container_400_63-moving.png'
+import container400x63Big from '../../assets/images/container_400x63.png'
+import container400x63BigMoving from '../../assets/images/container_400x63-moving.png'
+import container400x63Outline from '../../assets/images/container_400x63-outline.png'
 
 
 export default class Ship {
@@ -9,6 +10,8 @@ export default class Ship {
         this.distanceFromKaai = distanceFromKaai;
         this.posX = 0;
         this.posY = 0;
+        this.initialPosX = this.posX;
+        this.initialPosY = this.posY;
         this.rotationInDegrees = 0;
         
         this.displacementLimitToBeStaticInPx = 0.0001;
@@ -18,12 +21,16 @@ export default class Ship {
         this.image;
 
         this.imageStatic = new Image();
-        this.imageStatic.src = containerBig;
+        this.imageStatic.src = container400x63Big;
         this.imageStaticIsLoaded = false;
 
         this.imageMoving = new Image();
-        this.imageMoving.src = containerBigMoving;
+        this.imageMoving.src = container400x63BigMoving;
         this.imageMovingIsLoaded = false;
+
+        this.imageOutline = new Image();
+        this.imageOutline.src = container400x63Outline;
+        this.imageOutlineIsLoaded = false;
     }
 
     async loadImage() {
@@ -31,7 +38,7 @@ export default class Ship {
             this.imageStatic.onload = function(){
                 this.imageStaticIsLoaded = true;
                 console.log('Ship imageStatic loaded');
-                if (this.imageStaticIsLoaded && this.imageMovingIsLoaded) {
+                if (this.imageStaticIsLoaded && this.imageMovingIsLoaded && this.imageOutlineIsLoaded) {
                     // if both are loaded set image to static image
                     this.setImageToStatic();
                     resolve();
@@ -41,7 +48,16 @@ export default class Ship {
             this.imageMoving.onload = function(){
                 this.imageMovingIsLoaded = true;
                 console.log('Ship imageMoving loaded');
-                if (this.imageStaticIsLoaded && this.imageMovingIsLoaded) {
+                if (this.imageStaticIsLoaded && this.imageMovingIsLoaded && this.imageOutlineIsLoaded) {
+                    this.setImageToStatic();
+                    resolve();
+                }
+            }.bind(this);
+
+            this.imageOutline.onload = function(){
+                this.imageOutlineIsLoaded = true;
+                console.log('Ship imageMoving loaded');
+                if (this.imageStaticIsLoaded && this.imageMovingIsLoaded && this.imageOutlineIsLoaded) {
                     this.setImageToStatic();
                     resolve();
                 }
@@ -52,36 +68,38 @@ export default class Ship {
     draw(simCtx) {
         const length = simCtx.meterToPx(this.length);
         const width = simCtx.meterToPx(this.width);
-        const posXInPx = simCtx.meterToPx(this.posX)*-1;
-        const posYInPx = simCtx.meterToPx(this.posY)*-1;
-        
-        const canvasCoords = simCtx.originToCanvasCoords(
-            this.posX, 
-            this.posY, 
-            this.length,
-            this.width
-        );
 
-        const canvasOrigin = simCtx.originToCanvasCoords(
-            0,
-            0,
-            this.length,
-            this.width)
+        // Converteer meter naar px
+        // 
+        const posXInPx = simCtx.meterToPx(this.posX);
+        const posYInPx = simCtx.meterToPx(this.posY);
 
-        
-        // rotate context to draw the rotation of the ship
         simCtx.ctx.save();
-        // translate context to origin of simulation
+
+        // translate van context naar origin van de simulatie
         simCtx.ctx.translate(simCtx.originX, simCtx.originY);
+
+        // roteer de context naar de hoek van het schip
         simCtx.ctx.rotate(this.rotationInDegrees);
 
         // draw orange placeholder
         simCtx.ctx.fillStyle = 'orange';
-        simCtx.ctx.fillRect(posXInPx - (length/2), posYInPx - (width/2), length, width)
+        simCtx.ctx.fillRect((posXInPx*-1) - (length/2), (posYInPx*-1) - (width/2), length, width)
 
         // draw image of ship
-        simCtx.ctx.drawImage(this.image, posXInPx - (length/2), posYInPx - (width/2), length, width);
+        simCtx.ctx.drawImage(this.image, (posXInPx*-1) - (length/2), (posYInPx*-1) - (width/2), length, width);
+
+        // restore context
         simCtx.ctx.restore();
+    }
+
+    drawOutline(simCtx) {
+        const length = simCtx.meterToPx(this.length);
+        const width = simCtx.meterToPx(this.width);
+
+        const coords = simCtx.originToCanvasCoords(this.initialPosX, this.initialPosY, this.length, this.width );
+        // draw image of ship
+        simCtx.ctx.drawImage(this.imageOutline, coords.x, coords.y, length, width);
     }
 
     setImageToMoving(){

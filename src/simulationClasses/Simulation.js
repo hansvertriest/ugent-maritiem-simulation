@@ -153,6 +153,7 @@ export default class Simulation {
 
     drawCaseShip() {
         this.caseShip.draw(this.simCtx);
+        this.caseShip.drawOutline(this.simCtx);
     }
 
 

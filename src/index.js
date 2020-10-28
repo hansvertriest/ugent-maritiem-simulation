@@ -2,9 +2,9 @@ import { Data } from './dataClasses';
 import { Simulation } from './simulationClasses';
 
 // Load in data
-import metaData from '../assets/sim2/caseMetaData';
-import dataCoordsCSV from '../assets/sim2/dataCoords.csv' // collums => arrays
-import dataForcesCSV from '../assets/sim2/dataForces.csv'// collums => arrays
+import metaData from '../assets/sim1/caseMetaData';
+import dataCoordsCSV from '../assets/sim1/dataCoords.csv' // collums => arrays
+import dataForcesCSV from '../assets/sim1/dataForces.csv'// collums => arrays
 
 const appInit = async () => {
     // get shipTranslation data
