@@ -2,6 +2,7 @@ import Ship from "./Ship";
 import Hawser from "./Hawser";
 import Fender from "./Fender";
 import SimulationContext from "./SimulationContext";
+import Kaai from "./Kaai";
 
 export default class Simulation {
     constructor( width, height, data ) {
@@ -45,7 +46,7 @@ export default class Simulation {
             if (this.mouseIsDown) {
                 // if (!this.mouseX) this.mouseX = e.x;
                 // if (!this.mouseY) this.mouseY = e.y;
-                this.kaaiHeight -= this.simCtx.pxToMeter(e.y - this.mouseY);
+                this.kaai.heightInM -= this.simCtx.pxToMeter(e.y - this.mouseY);
                 this.simCtx.moveOrigin(
                     (e.x - this.mouseX),
                     (e.y - this.mouseY),
@@ -56,9 +57,10 @@ export default class Simulation {
         });
     }
 
-    init() {
+    async init() {
         this.setBackgroundColor();
-        this.drawKaai();
+        this.kaai = new Kaai(this.kaaiHeight);
+        await this.kaai.loadImage();
     }
 
     setNextAnimationTime() {
@@ -152,10 +154,7 @@ export default class Simulation {
     }
 
     drawKaai() {
-        const height = this.simCtx.meterToPx(this.kaaiHeight);
-        const width = this.canvas.width;
-        this.ctx.fillStyle = "blue";
-        this.ctx.fillRect(0, this.canvas.height - height, width, height);
+        this.kaai.draw(this.simCtx);
     }
 
     drawCaseShip() {
@@ -201,7 +200,7 @@ export default class Simulation {
         this.drawCaseShip();
         this.drawHawsers();
         this.drawFenders();
-        // this.caseShip.drawOutline(this.simCtx);
+        this.caseShip.drawOutline(this.simCtx);
 
         // set next animationTime
         this.setNextAnimationTime();

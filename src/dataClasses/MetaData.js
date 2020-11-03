@@ -59,8 +59,6 @@ export default class MetaData {
 
         this.bolderData = this.createBolderData();
         this.fenderData = this.createFenderData();
-
-        console.log(this.get());
     }
 
     interpretFile() {
