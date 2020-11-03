@@ -8,7 +8,7 @@ module.exports = {
     port: 9000
   },
   node: {
-    global: false,
+    global: true,
     __filename: false,
     __dirname: false,
   },
@@ -24,6 +24,9 @@ module.exports = {
           'style-loader',
           'css-loader'
         ],
+      },
+      { 
+        test: /\.xlsx$/, loader: "webpack-xlsx-loader" 
       },
       {
         test: /\.(png|svg|jpg|gif)$/,

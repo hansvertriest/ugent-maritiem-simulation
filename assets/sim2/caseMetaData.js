@@ -10,7 +10,7 @@ export default {
         type: 'container',
         length: 399,
         width: 63,
-        amountOfShipWidth: 199,
+        deltaYShips: 199,
         speedInKnots: 8,
         speedInMPerS: 4.115552,
     },

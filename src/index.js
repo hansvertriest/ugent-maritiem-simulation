@@ -1,12 +1,17 @@
-import { Data } from './dataClasses';
+import { Data, MetaData } from './dataClasses';
 import { Simulation } from './simulationClasses';
 
 // Load in data
-import metaData from '../assets/sim1/caseMetaData';
-import dataCoordsCSV from '../assets/sim1/dataCoords.csv' // collums => arrays
-import dataForcesCSV from '../assets/sim1/dataForces.csv'// collums => arrays
+// import metaData from '../assets/sim2/caseMetaData';
+import metaDataXLSX from '../assets/sim2/caseMetaData.xlsx';
+import dataCoordsCSV from '../assets/sim2/dataCoords.csv' // collums => arrays
+import dataForcesCSV from '../assets/sim2/dataForces.csv'// collums => arrays
+
+
 
 const appInit = async () => {
+    const metaData = new MetaData(metaDataXLSX).get();
+
     // get shipTranslation data
     const shipTranslations = dataForcesCSV.map((timePoint) => {
         return timePoint.filter((column, index) => {
@@ -18,21 +23,16 @@ const appInit = async () => {
     });
     
     // create data object
-    const data = new Data(metaData.bolderData, metaData.fenderData);
+    const data = new Data(metaData);
     data.addTimePoints(dataCoordsCSV, dataForcesCSV, shipTranslations);
-    console.log(data.getTimePoint(0));
-    console.log(data.getTimePoint(1));
-    console.log(data.getTimePoint(2));
-    console.log(data.getTimePoint(3));
-    console.log(data.getTimePoint(4));
     
-    // SIMULATION
+    // // SIMULATION
     const simulation = new Simulation(1000,600, data);
     simulation.init();
-    simulation.registerControls();
+    simulation.registerController();
     await simulation.addShip(metaData.caseShip, true);
-    simulation.addHawsers(metaData.bolderData, metaData.hawsersLimits);
-    simulation.addFenders(metaData.fenderData, metaData.fenderLimits);
+    simulation.addHawsers(metaData.bolderData, metaData.hawserMeta);
+    simulation.addFenders(metaData.fenderData, metaData.fenderMeta);
     simulation.drawCaseShip();
     simulation.play();
 }

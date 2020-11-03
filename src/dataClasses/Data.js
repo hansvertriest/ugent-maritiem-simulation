@@ -3,10 +3,12 @@ import FenderData from './FenderData';
 import TimePoint from './TimePoint';
 
 export default class Data {
-    constructor( bolderData, fenderData ) {
-        this.bolderData = bolderData;
-        this.fenderData = fenderData;
-        this.timePoints = []; // will contain bolder info at specific timepoint
+    constructor( caseMetaData ) {
+        this.caseMetaData = caseMetaData;
+
+        this.bolderData = this.caseMetaData.bolderData;
+        this.fenderData = this.caseMetaData.fenderData;
+        this.timePoints = []; // will contain all data at specific timepoint
     }
 
     async addTimePoints( dataCoords, dataForces, shipTranslation ) {
@@ -63,5 +65,4 @@ export default class Data {
     getTimePoint(index) {
         return this.timePoints[index];
     }
-
 }

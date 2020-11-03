@@ -83,8 +83,8 @@ export default class Ship {
         simCtx.ctx.rotate(this.rotationInDegrees);
 
         // draw orange placeholder
-        simCtx.ctx.fillStyle = 'orange';
-        simCtx.ctx.fillRect((posXInPx*-1) - (length/2), (posYInPx*-1) - (width/2), length, width)
+        // simCtx.ctx.fillStyle = 'orange';
+        // simCtx.ctx.fillRect((posXInPx) - (length/2), (posYInPx) - (width/2), length, width)
 
         // draw image of ship
         simCtx.ctx.drawImage(this.image, (posXInPx*-1) - (length/2), (posYInPx*-1) - (width/2), length, width);

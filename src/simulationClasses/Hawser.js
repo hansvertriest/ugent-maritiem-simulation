@@ -1,8 +1,8 @@
 export default class Hawser {
-    constructor(bolderPosX, bolderPosY, forceLimit, limits) {
+    constructor(bolderPosX, bolderPosY, forceMax, limits) {
         this.bolderPosX = bolderPosX;
         this.bolderPosY = bolderPosY;
-        this.forceLimit = forceLimit;
+        this.forceMax = forceMax;
         this.limit = limits;
 
         this.posOnShipX = 0;
@@ -10,9 +10,9 @@ export default class Hawser {
         this.currentLoad;
 
         // colors 
-        this.orange = 'orange';
-        this.green = 'green';
-        this.red = 'red';
+        this.colorFirstLimit = 'orange';
+        this.colorNoLimit = 'green';
+        this.colorSecondLimit = 'red';
     }
 
     draw(simCtx) {
@@ -48,12 +48,12 @@ export default class Hawser {
     }
 
     getHawserColor() {
-        const ratio = this.currentLoad / this.forceLimit;
-        if (ratio > this.limit.orange && ratio <= this.limit.red) {
-            return this.orange;
-        } else if ( ratio > this.limit.red) {
-            return this.red;
+        const ratio = this.currentLoad / this.forceMax;
+        if (ratio > this.limit.second && ratio <= this.limit.first) {
+            return this.colorFirstLimit;
+        } else if ( ratio > this.limit.first) {
+            return this.colorSecondLimit;
         }
-        return this.green;
+        return this.colorNoLimit;
     }
 }

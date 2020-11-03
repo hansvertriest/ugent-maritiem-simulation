@@ -11,8 +11,6 @@ export default class Simulation {
 
         this.backgroundColor = "#c1e6fb";
 
-
-        // this.simCtx.meterToPxFactor = 2;
         this.kaaiHeight = 100;
         this.originX = this.canvas.width/2;
         this.originY = this.canvas.height/2;
@@ -36,13 +34,17 @@ export default class Simulation {
         this.mouseIsDown = false;
     }
 
-    registerControls() {
-        window.addEventListener('mousedown', () => this.mouseIsDown = true)
+    registerController() {
+        window.addEventListener('mousedown', (e) => {
+            this.mouseX = e.x;
+            this.mouseY = e.y;
+            this.mouseIsDown = true
+        })
         window.addEventListener('mouseup', () => this.mouseIsDown = false)
         window.addEventListener('mousemove', (e) => {
             if (this.mouseIsDown) {
-                if (!this.mouseX) this.mouseX = e.x;
-                if (!this.mouseY) this.mouseY = e.y;
+                // if (!this.mouseX) this.mouseX = e.x;
+                // if (!this.mouseY) this.mouseY = e.y;
                 this.kaaiHeight -= this.simCtx.pxToMeter(e.y - this.mouseY);
                 this.simCtx.moveOrigin(
                     (e.x - this.mouseX),
@@ -105,14 +107,19 @@ export default class Simulation {
         }
     }
 
-    addFenders(fenderData, fenderLimits) {
+    addFenders(fenderData, fenderMeta) {
         // loop over all fenders and add a Fender object to fenderArray
         fenderData.forEach((fender) => {
             const newFender = new Fender(
                 fender.posX,
                 fender.posY,
-                fender.forceLimit,
-                fenderLimits
+                fender.forceMax,
+                fenderMeta.thicknessInM,
+                fenderMeta.widthInM,
+                {
+                    first: fenderMeta.first,
+                    second: fenderMeta.second,
+                }
             );
             this.fenderArray.push(newFender);
         });
@@ -125,14 +132,14 @@ export default class Simulation {
         });
     }
 
-    addHawsers(bolderData, hawserLimits) {
+    addHawsers(bolderData, hawserMeta) {
         // loop over all bolders and add a Hawser object to hawserArray
         bolderData.forEach((bolder) => {
             const hawser = new Hawser(
                 bolder.posX,
                 bolder.posY,
-                bolder.forceLimit,
-                hawserLimits
+                bolder.forceMax,
+                hawserMeta
             );
             this.hawserArray.push(hawser);
         });
@@ -153,33 +160,37 @@ export default class Simulation {
 
     drawCaseShip() {
         this.caseShip.draw(this.simCtx);
-        this.caseShip.drawOutline(this.simCtx);
     }
 
 
     doAnimation() {
-        // get timePoint
-        const timePoint = this.caseData.timePoints[this.animationTime];
+        // check if animation is done
+        if (this.getNextAnimationTime() >= this.caseData.timePoints.length) {
+            this.pause();
+        } else if (this.animationPlaying) {
+            // get timePoint
+            const timePoint = this.caseData.timePoints[this.animationTime];
 
-        // update kaai 
-        // this.kaaiHeight = this.simCtx.canvas.height - this.simCtx.originY ;
+            // update kaai 
+            // this.kaaiHeight = this.simCtx.canvas.height - this.simCtx.originY ;
 
-        // update caseShip parameters
-        this.caseShip.setPosX(timePoint.shipData.posX*this.translationAmplifierFactor);
-        this.caseShip.setPosY(timePoint.shipData.posY*this.translationAmplifierFactor);
-        this.caseShip.rotationInDegrees = timePoint.shipData.rotation*this.translationAmplifierFactor;
+            // update caseShip parameters
+            this.caseShip.setPosX(timePoint.shipData.posX*this.translationAmplifierFactor);
+            this.caseShip.setPosY(timePoint.shipData.posY*this.translationAmplifierFactor);
+            this.caseShip.rotationInDegrees = timePoint.shipData.rotation*this.translationAmplifierFactor;
 
-        // update hawsers parameters
-        this.hawserArray.forEach((hawser,index) => {
-            hawser.setPosOnShipX(timePoint.hawserData[index].posXShip, this.translationAmplifierFactor);
-            hawser.setPosOnShipY(timePoint.hawserData[index].posYShip, this.translationAmplifierFactor);
-            hawser.setCurrentLoad(timePoint.hawserData[index].force);
-        });
+            // update hawsers parameters
+            this.hawserArray.forEach((hawser,index) => {
+                hawser.setPosOnShipX(timePoint.hawserData[index].posXShip, this.translationAmplifierFactor);
+                hawser.setPosOnShipY(timePoint.hawserData[index].posYShip, this.translationAmplifierFactor);
+                hawser.setCurrentLoad(timePoint.hawserData[index].force);
+            });
 
-        // update fender currentforce
-        this.fenderArray.forEach((fender, index) => {
-            fender.setCurrentForce(timePoint.fenderData[index].force);
-        });
+            // update fender currentforce
+            this.fenderArray.forEach((fender, index) => {
+                fender.setCurrentForce(timePoint.fenderData[index].force);
+            });
+        }
 
         // clear screen
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -190,15 +201,12 @@ export default class Simulation {
         this.drawCaseShip();
         this.drawHawsers();
         this.drawFenders();
+        this.caseShip.drawOutline(this.simCtx);
 
-        // check if animation is done
-        if (this.getNextAnimationTime() >= this.caseData.timePoints.length) {
-            this.pause();
-        } else if (this.animationPlaying) {
-            // set next animationTime
-            this.setNextAnimationTime();
-            window.requestAnimationFrame(this.doAnimation.bind(this));
-        }
+        // set next animationTime
+        this.setNextAnimationTime();
+
+        window.requestAnimationFrame(this.doAnimation.bind(this));
     }
 
 }
