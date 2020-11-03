@@ -46,7 +46,11 @@ export default class Simulation {
 
     async init() {
         this.setBackgroundColor();
-        this.kaai = new Kaai(this.kaaiHeight);
+        this.kaai = new Kaai(
+            this.simCtx.originY, 
+            this.caseData.caseMetaData.caseShip.distanceFromKaai,
+            this.simCtx.pxToMeter(this.canvas.width)
+        );
         await this.kaai.loadImage();
     }
 

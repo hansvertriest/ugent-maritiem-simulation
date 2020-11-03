@@ -9,6 +9,9 @@ export default class SimulationContext {
         this.ctx = this.canvas.getContext("2d");
 
         this.meterToPxFactor = 2;
+
+        this.originX = this.canvas.width*0.5;
+        this.originY = this.canvas.height*0.6;
     }
 
     addToMeterToPxFactor(delta) {
