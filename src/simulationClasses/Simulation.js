@@ -1,3 +1,4 @@
+import Controls from './Controls';
 import Ship from "./Ship";
 import Hawser from "./Hawser";
 import Fender from "./Fender";
@@ -29,31 +30,17 @@ export default class Simulation {
         this.hawserArray = [];
         this.fenderArray = [];
 
-        // controll variables
-        this.mouseX;
-        this.mouseY;
-        this.mouseIsDown = false;
+        // controller for interaction
+        this.controls;
     }
 
     registerController() {
-        window.addEventListener('mousedown', (e) => {
-            this.mouseX = e.x;
-            this.mouseY = e.y;
-            this.mouseIsDown = true
-        })
-        window.addEventListener('mouseup', () => this.mouseIsDown = false)
-        window.addEventListener('mousemove', (e) => {
-            if (this.mouseIsDown) {
-                // if (!this.mouseX) this.mouseX = e.x;
-                // if (!this.mouseY) this.mouseY = e.y;
-                this.kaai.heightInM -= this.simCtx.pxToMeter(e.y - this.mouseY);
-                this.simCtx.moveOrigin(
-                    (e.x - this.mouseX),
-                    (e.y - this.mouseY),
-                )
-                this.mouseX = e.x;
-                this.mouseY = e.y;
-            }
+        this.controls = new Controls(this.simCtx);
+        this.controls.registerDrag((deltaInM) => {
+            this.kaai.heightInM -= this.simCtx.pxToMeter(deltaInM);
+        });
+        this.controls.registerZoom((delta) => {
+            this.simCtx.addToMeterToPxFactor(delta);
         });
     }
 

@@ -11,6 +11,10 @@ export default class SimulationContext {
         this.meterToPxFactor = 2;
     }
 
+    addToMeterToPxFactor(delta) {
+        this.meterToPxFactor += delta;
+    }
+
     setOrigin(posX, posY) {
         this.originX = posX;
         this.originY = posY;
