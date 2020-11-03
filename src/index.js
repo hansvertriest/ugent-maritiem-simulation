@@ -32,7 +32,7 @@ const appInit = async () => {
     await simulation.init();
     simulation.registerController();
     await simulation.addShip(metaData.caseShip, true);
-    simulation.addHawsers(metaData.bolderData, metaData.hawserMeta);
+    await simulation.addHawsers(metaData.bolderData, metaData.hawserMeta);
     simulation.addFenders(metaData.fenderData, metaData.fenderMeta);
     simulation.drawCaseShip();
     simulation.play();

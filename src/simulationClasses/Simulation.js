@@ -134,16 +134,43 @@ export default class Simulation {
         });
     }
 
-    addHawsers(bolderData, hawserMeta) {
-        // loop over all bolders and add a Hawser object to hawserArray
-        bolderData.forEach((bolder) => {
-            const hawser = new Hawser(
-                bolder.posX,
-                bolder.posY,
-                bolder.forceMax,
-                hawserMeta
-            );
-            this.hawserArray.push(hawser);
+    // async addHawsers(bolderData, hawserMeta) {
+        
+    //     // loop over all bolders and add a Hawser object to hawserArray
+    //     bolderData.forEach(async (bolder) => {
+    //         const hawser = new Hawser(
+    //             bolder.posX,
+    //             bolder.posY,
+    //             bolder.forceMax,
+    //             hawserMeta
+    //         );
+    //         this.hawserArray.push(hawser);
+    //         console.log('bolder');
+    //     });
+    // }
+
+    async addHawsers(bolderData, hawserMeta) {
+        return new Promise((resolve, reject) => {
+            // loop over all bolders and add a Hawser object to hawserArray
+            bolderData.forEach((bolder) => {
+                const hawser = new Hawser(
+                    bolder.posX,
+                    bolder.posY,
+                    bolder.forceMax,
+                    hawserMeta
+                );
+                this.hawserArray.push(hawser);
+            });
+
+            // load images of hawsers
+            this.hawserArray.forEach(async(hawser) => {
+                await hawser.loadImage();
+
+                // check if last hawser = loaded
+                if(this.hawserArray[this.hawserArray.length-1].imageIsLoaded) {
+                    resolve();
+                }
+            });            
         });
     }
 
