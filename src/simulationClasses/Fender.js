@@ -16,7 +16,8 @@ export default class Fender {
     }
 
     draw(simCtx) {
-        const posOnCanvas = simCtx.originToCanvasCoords(this.posX, this.posY, this.widthInM, this.height);
+        // Calculating pos with height=0 bc fenderOriginDefinition = x: widhth/2 y:0
+        const posOnCanvas = simCtx.originToCanvasCoords(this.posX, this.posY, this.thicknessInM, 0);
         simCtx.ctx.fillStyle = this.getFenderColor();
         simCtx.ctx.fillRect(posOnCanvas.x, posOnCanvas.y, simCtx.meterToPx(this.widthInM), simCtx.meterToPx(this.thicknessInM))
     }

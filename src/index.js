@@ -10,6 +10,7 @@ import dataForcesCSV from '../assets/sim2/dataForces.csv'// collums => arrays
 
 
 const appInit = async () => {
+    // parse xlsx to formatted MetaData object
     const metaData = new MetaData(metaDataXLSX).get();
 
     // get shipTranslation data
@@ -26,7 +27,7 @@ const appInit = async () => {
     const data = new Data(metaData);
     data.addTimePoints(dataCoordsCSV, dataForcesCSV, shipTranslations);
     
-    // // SIMULATION
+    // SIMULATION
     const simulation = new Simulation(1000,600, data);
     simulation.init();
     simulation.registerController();

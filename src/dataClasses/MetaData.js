@@ -137,10 +137,11 @@ export default class MetaData {
         }
 
         const firstValueRecord = this.fileTitleLocations.paramsHawser + 2;
+        const amountOfBolders = this.getCellData('b', this.fileTitleLocations.paramsHawser + 1)
         const hawserArray = [];
 
         // create object per hawser
-        for (let record = firstValueRecord; record < this.fileTitleLocations.paramsFender; record ++) {
+        for (let record = firstValueRecord; record < firstValueRecord+amountOfBolders; record ++) {
             hawserArray.push({
                 posX: this.getCellData('b',record),
                 posY: this.getCellData('c',record),
@@ -168,10 +169,11 @@ export default class MetaData {
         }
 
         const firstValueRecord = this.fileTitleLocations.paramsFender + 2;
+        const amountOfHawsers = this.getCellData('b', this.fileTitleLocations.paramsFender + 1)
         const fenderArray = [];
 
         // create object per hawser
-        for (let record = firstValueRecord; record < this.fileTitleLocations.paramsHydro; record ++) {
+        for (let record = firstValueRecord; record < firstValueRecord+amountOfHawsers; record ++) {
             fenderArray.push({
                 posX: this.getCellData('a',record),
                 posY: this.getCellData('b',record),

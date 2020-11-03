@@ -201,7 +201,7 @@ export default class Simulation {
         this.drawCaseShip();
         this.drawHawsers();
         this.drawFenders();
-        this.caseShip.drawOutline(this.simCtx);
+        // this.caseShip.drawOutline(this.simCtx);
 
         // set next animationTime
         this.setNextAnimationTime();
