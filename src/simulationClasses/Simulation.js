@@ -87,13 +87,6 @@ export default class Simulation {
         if (isCaseShip) {
             this.caseShip = newShip;
             await this.caseShip.loadImage();
-            // set origin relative to distance from kaai
-            this.simCtx.setOrigin(
-                this.originX,
-                (this.distanceToKaaiInMeter == 0) 
-                    ? this.canvas.height - this.simCtx.meterToPx(this.kaaiHeight) + this.simCtx.meterToPx(this.caseShip.distanceFromKaai)
-                    : this.canvas.height - this.simCtx.meterToPx(this.kaaiHeight) + this.simCtx.meterToPx(this.distanceToKaaiInMeter)
-            );
         } else {
             this.passingShip = newShip;
             await this.passingShip.loadImage();
@@ -187,9 +180,6 @@ export default class Simulation {
         } else if (this.animationPlaying) {
             // get timePoint
             const timePoint = this.caseData.timePoints[this.animationTime];
-
-            // update kaai 
-            // this.kaaiHeight = this.simCtx.canvas.height - this.simCtx.originY ;
 
             // update caseShip parameters
             this.caseShip.setPosX(timePoint.shipData.posX*this.translationAmplifierFactor);
