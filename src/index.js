@@ -1,18 +1,15 @@
 import { Data, MetaData } from './dataClasses';
 import { Simulation } from './simulationClasses';
 
+const XLSX = require('xlsx');
+
 // Load in data
 // import metaData from '../assets/sim2/caseMetaData';
 import metaDataXLSX from '../assets/sim2/caseMetaData.xlsx';
 import dataCoordsCSV from '../assets/sim2/dataCoords.csv' // collums => arrays
 import dataForcesCSV from '../assets/sim2/dataForces.csv'// collums => arrays
 
-
-
-const appInit = async () => {
-    // parse xlsx to formatted MetaData object
-    const metaData = new MetaData(metaDataXLSX).get();
-
+const appInit = async (metaData) => {
     // get shipTranslation data
     const shipTranslations = dataForcesCSV.map((timePoint) => {
         return timePoint.filter((column, index) => {
@@ -38,5 +35,26 @@ const appInit = async () => {
     simulation.play();
 }
 
+// create inputfields
+const file = document.createElement('input');
+file.setAttribute('type', 'file');
+document.body.appendChild(file);
 
-appInit();
+// detect when a file is selected
+file.onchange = (e) => {
+    const reader = new FileReader();
+
+    // read file
+    reader.onload = (e) => {
+        const data = e.target.result;
+
+        const file = XLSX.read(data, {type: 'binary'});
+
+        // parse xlsx to formatted MetaData object
+        const metaData = new MetaData(file).get();
+
+        appInit(metaData);
+    }
+    reader.readAsBinaryString(e.target.files[0])
+    
+}

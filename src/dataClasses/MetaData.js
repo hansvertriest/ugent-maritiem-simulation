@@ -1,3 +1,5 @@
+const XLSX = require('xlsx');
+
 export default class MetaData {
     constructor(file) {
         this.file = file;

@@ -118,21 +118,6 @@ export default class Simulation {
         });
     }
 
-    // async addHawsers(bolderData, hawserMeta) {
-        
-    //     // loop over all bolders and add a Hawser object to hawserArray
-    //     bolderData.forEach(async (bolder) => {
-    //         const hawser = new Hawser(
-    //             bolder.posX,
-    //             bolder.posY,
-    //             bolder.forceMax,
-    //             hawserMeta
-    //         );
-    //         this.hawserArray.push(hawser);
-    //         console.log('bolder');
-    //     });
-    // }
-
     async addHawsers(bolderData, hawserMeta) {
         return new Promise((resolve, reject) => {
             // loop over all bolders and add a Hawser object to hawserArray
